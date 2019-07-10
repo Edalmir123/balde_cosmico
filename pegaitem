@@ -1,0 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class pegaitem : MonoBehaviour
+{
+
+
+    GameObject objetoPrincipal;
+
+
+    // Use this for initialization
+    void Start()
+    {
+        objetoPrincipal = GameObject.Find("GameEngine");
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            switch (this.gameObject.tag)
+            {
+                case "remedio":
+                    //objetoPrincipal.SendMessage ("pegaRemedio"); 
+                    objetoPrincipal.SendMessage("vidaDoSaci", -50);
+                    break;
+                case "bola":
+                    objetoPrincipal.SendMessage("destruidor", this.gameObject);
+                    break;
+                /*case "gol":
+                    objetoPrincipal.SendMessage ("destruidor",this.gameObject); 
+                    break;*/
+                case "dano":
+                    objetoPrincipal.SendMessage("dano");
+                    break;
+                default:
+                    break;
+            }
+
+            Destroy(this.gameObject);
+        }
+    }
+}
