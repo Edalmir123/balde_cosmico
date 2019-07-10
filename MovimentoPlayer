@@ -1,0 +1,197 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+// MOVIMENTAÇÃO ESPECIAL E MORTE DE PERSONAGEM
+
+public class MovimentoPlayer : MonoBehaviour {
+	public	Animator anim;
+	public GameObject Pistola;
+	public GameObject Rifle;
+	public GameObject FacaBomba;
+	public int arma;
+    public AudioClip somSpray;
+    public bool pistolaAtiva;
+	public bool rifleAtivo;
+	public bool facaAtivo;
+	public bool bombaAtivo;
+    public bool atirador;
+	// Use this for initialization
+	void Awake () {
+		transform.tag = "Player";
+		arma = 1;
+		pistolaAtiva = true;
+        rifleAtivo = false;
+		arma = 2;
+        facaAtivo = false;
+		arma = 3;
+        bombaAtivo = false;
+		arma = 4;
+        atirador = false;
+        arma = 5;
+        bombaAtivo = false;
+        arma = 6;
+    }
+
+    // Use this for Start
+    private void Start()
+    {
+        Pistola = GameObject.FindGameObjectWithTag("Pistola");
+        Rifle = GameObject.FindGameObjectWithTag("Rifle");
+        Rifle.SetActive(false);
+        FacaBomba = GameObject.FindGameObjectWithTag("FacaBomba");
+        FacaBomba.SetActive(false);
+    }
+    // Update is called once per frame
+    void Update () {
+ 
+		anim.SetBool ("rifleAtivo", rifleAtivo);
+		anim.SetBool ("pistolaAtiva", pistolaAtiva);
+		anim.SetBool ("facaAtivo", facaAtivo);
+		anim.SetBool ("bombaAtivo", bombaAtivo);
+        anim.SetBool("atirador", atirador);
+
+
+		if (Input.GetKeyDown("1") ) {
+			pistolaAtiva = true;
+			rifleAtivo = false;
+            bombaAtivo = false;
+            facaAtivo = false;
+            if (pistolaAtiva == true)
+            {
+                Pistola.SetActive(true);
+                Rifle.SetActive(false);
+                FacaBomba.SetActive(false);
+                if (Input.GetButton("Fire1"))
+                {
+                    GetComponent<AudioSource>().PlayOneShot(somSpray, 1.0f);
+                }
+            }
+
+		} 
+
+
+		if (Input.GetKeyDown("2") ) {
+			rifleAtivo = true;
+            bombaAtivo = false;
+            pistolaAtiva = false;
+			facaAtivo = false;
+			if (pistolaAtiva == false) {
+				Rifle.SetActive (true); 
+				Pistola.SetActive (false);
+				FacaBomba.SetActive (false);
+                if (Input.GetButton("Fire1"))
+                {
+                    if (rifleAtivo == true)
+                    {
+                        atirador = true;
+                        anim.CrossFade("rifleAtirando", 0.2f);
+                        //anim.SetBool("atirador", true);
+
+                    }
+                }
+            }
+
+		}
+
+
+		if (Input.GetKeyDown("3") ) {
+
+				rifleAtivo = false;
+				pistolaAtiva = false;
+				facaAtivo = true;
+            bombaAtivo = false;
+				if (pistolaAtiva == false) {
+					Rifle.SetActive (false); 
+					Pistola.SetActive (false);
+				FacaBomba.SetActive (true);
+                anim.CrossFade("facada", 0.2f);
+            }
+
+		}
+
+
+		if (Input.GetKeyDown("4") ) {
+            bombaAtivo = true;
+			rifleAtivo = false;
+			pistolaAtiva = false;
+			facaAtivo = false;
+			if (pistolaAtiva == false) {
+				Rifle.SetActive (false); 
+				Pistola.SetActive (false);
+				FacaBomba.SetActive (true);
+                anim.CrossFade("jogaBomba", 0.2f);
+
+            }
+            /*
+            if (Mathf.Abs(Input.GetAxis("Vertical")) > 0.1F)
+            {
+                anim.CrossFade("facada", 0.2f);
+            }
+           else if (Mathf.Abs(Input.GetAxis("Vertical")) > 0.1F)
+            {
+                
+                anim.CrossFade("jogaBomba", 0.2f);
+            }
+            else if (Mathf.Abs(Input.GetAxis("Vertical")) > 0.1F)
+            {
+                anim.CrossFade("rifleAtirando", 0.2f);
+            }*/
+		}
+        
+		if (arma == 1) {
+			rifleAtivo = false;
+			pistolaAtiva = true;
+            facaAtivo = false;
+            Pistola.SetActive (true);
+			Rifle.SetActive (false);
+            FacaBomba.SetActive(false);
+            anim.SetBool("pistolaAtiva",true);
+            if (Input.GetButton("Fire1")) {
+            }
+		}
+        if (arma == 2)
+        {
+            rifleAtivo = true;
+            pistolaAtiva = false;
+            facaAtivo = false;
+            Rifle.SetActive(true);
+            Pistola.SetActive(false);
+            FacaBomba.SetActive(false);
+            anim.SetBool("rifleAtivo", true);   
+        }
+        if (arma == 3)
+        {
+
+            rifleAtivo = false;
+            pistolaAtiva = false;
+            facaAtivo = true;
+            Pistola.SetActive(true);
+            Rifle.SetActive(false);
+            FacaBomba.SetActive(true);
+            anim.SetBool("facaAtivo;", true);
+        }
+        if (arma == 4)
+        {
+            bombaAtivo = true;
+            rifleAtivo = false;
+            pistolaAtiva = false;
+            facaAtivo = false;
+            Pistola.SetActive(false);
+            Rifle.SetActive(false);
+            FacaBomba.SetActive(false);
+            anim.SetBool("bombaAtivo;", true);
+        }
+        if (arma == 5)
+        {
+            rifleAtivo = true;
+            pistolaAtiva = false;
+            facaAtivo = false;
+            Rifle.SetActive(true);
+            Pistola.SetActive(false);
+            FacaBomba.SetActive(false);
+            anim.SetBool("atirador", true);
+        }
+    }
+  
+}
