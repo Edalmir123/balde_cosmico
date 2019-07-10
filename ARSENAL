@@ -1,0 +1,73 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+// MOVIMENTAÇÃO ESPECIAL E MORTE DE PERSONAGEM
+
+public class ARSENAL : MonoBehaviour { 
+    public int arma;
+    public float damage = 10f;
+    public float range = 100f;
+    public float impactForce = 30f;
+    public float fireRate = 15f;
+    public Camera fpsCam;
+    public Transform pistola;
+    public GameObject impactEffect;
+    private float nextTimeToFire = 0f;
+    public ParticleSystem Effect;
+    // Use this for initialization
+    void Awake()
+    {
+        
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetButtonDown("Fire1") && Time.time >= nextTimeToFire)
+        {
+            nextTimeToFire = Time.time + 1f / fireRate;
+            Shoot();
+        }
+
+    }
+    // tiro e efeitos de tiro
+    void Shoot()
+    {
+        Effect.Play();
+
+
+        RaycastHit hit;
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
+        {
+            Debug.Log(hit.transform.name);
+            Perseguidor perseguidor = hit.transform.GetComponent<Perseguidor>();
+            if (perseguidor != null)
+            {
+                perseguidor.TakeDamage(damage);
+            }
+            if (hit.rigidbody != null)
+            {
+                hit.rigidbody.AddForce(-hit.normal * impactForce);
+            }
+			Debug.Log(hit.transform.name);
+			CHEFAO chefao = hit.transform.GetComponent<CHEFAO>();
+			if (chefao != null)
+			{
+				chefao.TakeDamage(damage);
+			}
+			if (hit.rigidbody != null)
+			{
+				hit.rigidbody.AddForce(-hit.normal * impactForce);
+			}
+            GameObject impactGo = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(impactGo, 2f);
+        }
+    }
+}
+
+      
+   
+
+
