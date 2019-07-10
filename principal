@@ -1,0 +1,94 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class principal : MonoBehaviour {
+	int _remedio;
+	int _bola;
+	int contaPisca;
+	string _AtualCartao;
+	public GameObject remedio;
+	public Text sacivida;
+	GameObject jogador;
+	GameObject gol;
+	public int vida = 100;
+    public GameObject menu; 
+    private bool isShowing; // mostra se pegou a bola ou não
+    // Use this for initialization
+  
+    void Start () {
+		
+		jogador = GameObject.FindGameObjectWithTag ("Player");
+
+        menu = GameObject.FindGameObjectWithTag("someRapido");
+
+		sacivida.transform.position = new Vector2 (sacivida.GetComponent<RectTransform>().sizeDelta.x/2 + 10, Screen.height - sacivida.GetComponent<RectTransform>().sizeDelta.y/2 - 10);
+
+        vidaDoSaci(200);
+    }
+
+	// Update is called once per frame
+	void Update () {
+        
+    }
+
+	public void pegaRemedio(){
+		_remedio++; 
+		print (_remedio);
+	}
+
+	// as chaves do jogo
+	public void destruidor(GameObject _gameObject ){
+		Destroy (GameObject.Find("Gol portal "+_gameObject.gameObject.name.Substring(_gameObject.gameObject.name.Length-1)));
+		Destroy (_gameObject.gameObject);
+        
+
+	} 
+	// vida do saci
+	public void vidaDoSaci(int _vida = 200){
+        if (_vida != 200)
+        {
+            this.vida -= _vida;
+        }else
+        {
+            this.vida = _vida;
+        }
+		
+		print (_vida);
+		if (this.vida <= 0) {
+            this.vida = 0;
+			Morte ();
+		}
+        sacivida.text = this.vida.ToString() + " Energia";
+	}
+	// efeito de dano
+	public void efeitopancada(){
+
+		jogador.GetComponent<CharacterController> ().Move (jogador.transform.TransformDirection(Vector3.back));
+		InvokeRepeating ("pisca",0,0.15f);
+	}
+
+	void pisca (){
+
+		contaPisca++;
+		jogador.SetActive (!jogador.activeInHierarchy);
+
+		if(contaPisca > 7){
+
+			contaPisca = 0;
+			jogador.SetActive (true);
+			CancelInvoke ();
+		}
+	} 
+	void Morte(){
+
+		SceneManager.LoadScene ("TelaDeInicio");
+	}
+	public void pegaGol(GameObject _gameObject){
+		
+	}
+
+	
+}
