@@ -1,0 +1,58 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
+
+public class Perseguidor : MonoBehaviour
+{
+
+	private GameObject jogador;
+    private GameObject Principal;
+    private UnityEngine.AI.NavMeshAgent navMesh;
+	private bool podeAtacar;
+    public float health;
+
+	// Use this for initialization
+	void Start () {
+		podeAtacar = true;
+        jogador = GameObject.FindGameObjectWithTag("Player");
+        navMesh = GetComponent<UnityEngine.AI.NavMeshAgent> ();
+		Principal = GameObject.FindGameObjectWithTag("GameController");
+
+	}
+
+	// Update is called once per frame
+	void Update () {
+        navMesh.destination = jogador.transform.position;
+		if (Vector3.Distance (transform.position, jogador.transform.position) < 1.5f) {
+			Atacar ();
+		}
+	}
+	void Atacar(){
+		if (podeAtacar == true) {
+			StartCoroutine ("TempoDeAtaque");
+			Principal.SendMessage("vidaDoSaci",10);
+           
+		}
+	}
+
+	IEnumerator TempoDeAtaque(){
+		podeAtacar = false;
+		yield return new WaitForSeconds (1);
+		podeAtacar = true;
+	}
+    public void TakeDamage(float amount)
+    {
+        health -= amount;
+        if(health <= 0f)
+        {
+            Die();
+        }
+    }
+    void Die()
+    {
+        Destroy(gameObject);
+    }
+}
+
